@@ -21,4 +21,6 @@ public interface ObavezeRepoInterface {
     public List<Obaveza> dohvatanjeIsteklihObavezaZaPredmet(Long idPredmet);
 
     public List<Obaveza> dohvatanjeIsteklihNeobradjenihObaveza();
+
+    public void oznaciMailPoslat(long idObaveze);
 }

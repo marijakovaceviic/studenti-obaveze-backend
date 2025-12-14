@@ -7,10 +7,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Service;
 
 import com.example.backend.db.PrijavaRepo;
 import com.example.backend.modeli.Student;
 
+@Service
 public class PrijaveService {
     
     public byte[] generisanjeListePrijavljenihStudenata(Long idObaveza) {

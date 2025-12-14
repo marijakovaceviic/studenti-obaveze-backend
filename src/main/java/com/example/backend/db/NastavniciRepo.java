@@ -7,14 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Repository;
+
 import com.example.backend.modeli.Nastavnik;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+@Repository
 public class NastavniciRepo implements NastavniciRepoInterface {
 
     @Override
-    public int dodavanjeNastavnika(Nastavnik nastavnik) {
+    public int dodavanjeNastavnika(Nastavnik nastavnik, String hesiranaLozinka) {
 
         //provera da li nastavnik vec ima nalog
         try (Connection conn = DB.source().getConnection();
@@ -43,9 +45,6 @@ public class NastavniciRepo implements NastavniciRepoInterface {
             ps.setString(1, nastavnik.getIme());
             ps.setString(2, nastavnik.getPrezime());
             ps.setString(3, nastavnik.getEmail());
-
-            String lozinka = generisanjeLozinke();
-            String hesiranaLozinka = hesiranjeLozinke(lozinka);
             ps.setString(4, hesiranaLozinka);
             
             return ps.executeUpdate();
@@ -54,25 +53,6 @@ public class NastavniciRepo implements NastavniciRepoInterface {
             e.printStackTrace();
         }
         return 0;
-    }
-
-    private String generisanjeLozinke(){
-        String karakteri = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!$%#@*";
-        StringBuilder lozinka = new StringBuilder();
-        java.util.Random rand = new java.util.Random();
-
-        for (int i = 0; i < 10; i++) {   // lozinka od 10 karaktera
-            lozinka.append(karakteri.charAt(rand.nextInt(karakteri.length())));
-        }
-        
-        //poslati nastavniku sifru na email
-        return lozinka.toString();
-    }
-
-    private String hesiranjeLozinke(String lozinka){
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); 
-        String hash = encoder.encode(lozinka.toString());
-        return hash;
     }
 
     @Override
@@ -186,5 +166,75 @@ public class NastavniciRepo implements NastavniciRepoInterface {
 
         return 0;
     }
-    
+
+    @Override
+    public Nastavnik login(String email, String lozinka) {
+        try (Connection conn = DB.source().getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                "SELECT * FROM nastavnici WHERE email = ?"
+            )) {
+
+            ps.setString(1, email);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String hashIzBaze = rs.getString("lozinka");
+                    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                    if (encoder.matches(lozinka, hashIzBaze)) {
+                        Nastavnik n = new Nastavnik();
+                        n.setId(rs.getLong("id"));
+                        n.setIme(rs.getString("ime"));
+                        n.setPrezime(rs.getString("prezime"));
+                        n.setEmail(rs.getString("email"));
+                        n.setLozinka(rs.getString("lozinka"));
+                        return n;
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null; 
+    }
+
+    @Override
+    public int promenaLozinke(String email, String staraLozinka, String hesiranaNovaLozinka) {
+        try (Connection conn = DB.source().getConnection();) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM nastavnici WHERE email = ?")) {
+                ps.setString(1, email);
+
+                String hashIzBaze;
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        hashIzBaze = rs.getString("lozinka");    
+                    }
+                    else{
+                        return 0;
+                    }
+                }
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                if (!encoder.matches(staraLozinka, hashIzBaze)) {
+                    return 0;
+                }
+                try (PreparedStatement ps1 = conn.prepareStatement(
+                        "UPDATE nastavnici SET lozinka = ? where email= ?")) {
+
+                    ps1.setString(1, hesiranaNovaLozinka);
+                    ps1.setString(2, email);
+
+                    return ps1.executeUpdate();
+
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+
+    }
+
 }

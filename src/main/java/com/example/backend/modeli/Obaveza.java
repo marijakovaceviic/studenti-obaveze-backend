@@ -10,6 +10,7 @@ public class Obaveza {
     private String opis;
     private LocalDateTime pocetak;
     private LocalDateTime kraj;
+    private Boolean poslat_email;
 
     private String nazivPredmeta;
     private String sifraPredmeta;
@@ -96,5 +97,13 @@ public class Obaveza {
 
     public void setSifraPredmeta(String sifraPredmeta) {
         this.sifraPredmeta = sifraPredmeta;
+    }
+
+    public void setPoslat_email(Boolean poslat){
+        this.poslat_email = poslat;
+    }
+
+    public Boolean getPoslat_email(){
+        return this.poslat_email;
     }
 }

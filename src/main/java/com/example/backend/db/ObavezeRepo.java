@@ -9,8 +9,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.example.backend.modeli.Obaveza;
 
+@Repository
 public class ObavezeRepo implements ObavezeRepoInterface{
 
     @Override
@@ -261,8 +264,8 @@ public class ObavezeRepo implements ObavezeRepoInterface{
 
         try (Connection conn = DB.source().getConnection();
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT * FROM obaveze\n" + 
-                "WHERE  poslat_email = false AND kraj < NOW()"
+                "SELECT o.*, p.naziv AS nazivPredmeta, p.sifra AS sifra FROM obaveze o join predmeti p ON (o.predmet = p.id)\n" + 
+                "WHERE  o.poslat_email = false AND o.kraj < NOW()"
             )) {
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -276,6 +279,8 @@ public class ObavezeRepo implements ObavezeRepoInterface{
                         rs.getObject("pocetak", LocalDateTime.class),
                         rs.getObject("kraj", LocalDateTime.class)
                     );
+                    o.setNazivPredmeta(rs.getString("nazivPredmeta"));
+                    o.setSifraPredmeta(rs.getString("sifra"));
                     o.setId(rs.getLong("id"));
                     obaveze.add(o);
                 }
@@ -288,5 +293,19 @@ public class ObavezeRepo implements ObavezeRepoInterface{
         return obaveze;
     }
 
-    
+    @Override
+    public void oznaciMailPoslat(long idObaveze) {
+        try (Connection conn = DB.source().getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                "UPDATE obaveze SET poslat_email = TRUE WHERE id = ?"
+            )) {
+            
+            ps.setLong(1, idObaveze);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

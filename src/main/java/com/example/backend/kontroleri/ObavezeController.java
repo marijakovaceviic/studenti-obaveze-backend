@@ -18,38 +18,44 @@ import com.example.backend.modeli.Obaveza;
 @CrossOrigin(origins = "http://localhost:4200")
 public class ObavezeController {
 
+    private final ObavezeRepo obavezeRepo;
+
+    public ObavezeController(ObavezeRepo obavezeRepo) {
+        this.obavezeRepo = obavezeRepo;
+    }
+
     @PostMapping("/dodavanje")
     public Long dodavanjeObaveze(@RequestBody Obaveza obaveza) {
-        return new ObavezeRepo().dodavanjeObaveze(obaveza);
+        return this.obavezeRepo.dodavanjeObaveze(obaveza);
     }
 
     @GetMapping("/zaPredmet/{id}")
     public List<Obaveza> dohvatanjeObavezaZaPredmet(@PathVariable Long id){
-        return new ObavezeRepo().dohvatanjeObavezaZaPredmet(id);
+        return this.obavezeRepo.dohvatanjeObavezaZaPredmet(id);
     }
 
     @GetMapping("/zaStudenta/{id}")
     public List<Obaveza> dohvatanjeObavezaZaStudenta(@PathVariable Long id){
-        return new ObavezeRepo().dohvatanjeObavezaZaStudenta(id);
+        return this.obavezeRepo.dohvatanjeObavezaZaStudenta(id);
     }
 
     @GetMapping("/sveObaveze")
     public List<Obaveza> dohvatanjeSvihObaveza(@PathVariable Long id){
-        return new ObavezeRepo().dohvatanjeSvihObaveza();
+        return this.obavezeRepo.dohvatanjeSvihObaveza();
     }
     
     @GetMapping("/zaNastavnika/{id}")
     public List<Obaveza> dohvatanjeObavezaZaNastavnika(@PathVariable Long id){
-        return new ObavezeRepo().dohvatanjeObavezaZaNastavnika(id);
+        return this.obavezeRepo.dohvatanjeObavezaZaNastavnika(id);
     }
 
     @GetMapping("/dohvatanjePoId/{id}")
     public Obaveza dohvatanjeObaveze(@PathVariable Long id){
-        return new ObavezeRepo().dohvatanjeObaveze(id);
+        return this.obavezeRepo.dohvatanjeObaveze(id);
     }
 
     @GetMapping("/istekle/zaPredmet/{id}")
     public List<Obaveza> dohvatanjeIsteklihObavezaZaNastavnika(@PathVariable Long id){
-        return new ObavezeRepo().dohvatanjeIsteklihObavezaZaPredmet(id);
+        return this.obavezeRepo.dohvatanjeIsteklihObavezaZaPredmet(id);
     }
 }

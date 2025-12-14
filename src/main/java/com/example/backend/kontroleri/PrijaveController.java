@@ -68,7 +68,7 @@ public class PrijaveController {
                 br++;
             }
 
-             for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++) {
                 list.autoSizeColumn(i);
             }
 
@@ -101,7 +101,7 @@ public class PrijaveController {
     }
 
     @GetMapping("/brojPrijava/{idObaveza}")
-    public int brojPredatihRadova(@PathVariable Long idObaveza){
+    public int brojPrijavljenih(@PathVariable Long idObaveza){
         return new PrijavaRepo().brojPrijavljenih(idObaveza);
     }
 

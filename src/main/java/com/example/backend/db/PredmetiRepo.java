@@ -229,9 +229,9 @@ public class PredmetiRepo implements PredmetiRepoInterface{
 
         try (Connection conn = DB.source().getConnection();
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT DISTINCT p.godina " +
-                "FROM student_predmet sp " +
-                "JOIN predmeti p ON sp.idPredmet = p.id " +
+                "SELECT DISTINCT p.godina \n" +
+                "FROM student_predmet sp \n" +
+                "JOIN predmeti p ON sp.idPredmet = p.id \n" +
                 "WHERE sp.idStudent = ?"
             )) {
 

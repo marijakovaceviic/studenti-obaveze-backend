@@ -12,9 +12,11 @@ public interface StudentiRepoInterface {
 
     public Student prijavaStudenta(Student student);
 
-    public int promenaLozinke(Student student);
+    public int promenaLozinke(String email, String staraLozinka, String hesiranaNovaLozinka);
 
     public String dohvatanjeMejlaStudenta(Long idStudenta);
 
     public List<Student> dohvatanjeStudenataKojiPratePredmet(Long idPredmet);
+
+    public List<Student> dohvatanjeRegistrovanihStudenata();
 }

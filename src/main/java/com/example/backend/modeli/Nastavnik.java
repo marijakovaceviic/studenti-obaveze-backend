@@ -5,11 +5,19 @@ public class Nastavnik {
     private String ime;
     private String prezime;
     private String email;
+    private String lozinka;
+
+    public Nastavnik(){}
 
     public Nastavnik(String ime, String prezime, String email){
         this.ime = ime;
         this.prezime = prezime;
         this.email = email;
+    }
+
+    public Nastavnik(String email, String lozinka){
+        this.email = email;
+        this.lozinka = lozinka;
     }
 
     public String getIme() {
@@ -42,5 +50,13 @@ public class Nastavnik {
 
     public void setId(Long id){
         this.id = id;
+    }
+
+    public String getLozinka() {
+        return lozinka;
+    }
+
+    public void setLozinka(String lozinka) {
+        this.lozinka = lozinka;
     }
 }
