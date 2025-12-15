@@ -37,7 +37,7 @@ public class PredajeController {
             try{
                 String nazivFajla = fajl.getOriginalFilename();
                 if (!nazivFajla.endsWith(".zip")) {
-                    return ResponseEntity.badRequest().body("Fajl mora biti ZIP");
+                    return ResponseEntity.badRequest().body(-1);
                 }
 
                 String folder = "D:/studentskiRadovi/obaveza" + idObaveza;
@@ -51,12 +51,12 @@ public class PredajeController {
 
                 String putanjaZBazu = folder + "/" + noviNaziv;
                 Integer status = new PredajaRepo().novaPredaja(idStudent, idObaveza, putanjaZBazu);
-                if (status < 0) return ResponseEntity.status(500).body("Greska pri čuvanju fajla");
+                if (status < 0) return ResponseEntity.status(500).body(-1);
 
-                return ResponseEntity.ok("Sacuvano");
+                return ResponseEntity.ok(0);
             }
              catch (Exception e) {
-                return ResponseEntity.status(500).body("Greska pri čuvanju fajla");
+                return ResponseEntity.status(500).body(-1);
             }
     }
 

@@ -19,4 +19,8 @@ public interface NastavniciRepoInterface {
     public Nastavnik login(String email, String hesiranaLozinka);
 
     public int promenaLozinke(String email, String staraLozinka, String hesiranaNovaLozinka);
+
+    public int upravljanjeZaduzenZaDemonstratore(long idNastavnik, boolean zaduzen);
+
+    public Nastavnik dohvatiZaduzenogZaDemonstratore();
 }

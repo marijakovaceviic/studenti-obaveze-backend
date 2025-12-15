@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.backend.db.DemonstratoriRepo;
 import com.example.backend.modeli.DemonstartoriForma;
 import com.example.backend.modeli.DemonstratoriPrijava;
+import com.example.backend.modeli.Predmet;
 import com.example.backend.modeli.PredmetPrijavljeniDTO;
 import com.example.backend.modeli.Student;
 
@@ -178,5 +179,10 @@ public class DemonstratoriController {
     @GetMapping("/zaduzenNastavnik/{id}")
     public boolean daLiJeZaduzenZaDemonstratore(@PathVariable Long id){
         return demonstratoriRepo.daLiJeZaduzenZaDemonstratore(id);
+    }
+
+    @GetMapping("/prijavljeniPredmeti/{idStudent}/{idForma}")
+    public List<Predmet> prijavljeniPredmetiZaStudenta(@PathVariable Long idStudent, @PathVariable Long idForma){
+        return demonstratoriRepo.prijavljeniPredmetiZaStudenta(idStudent, idForma);
     }
 }

@@ -81,6 +81,22 @@ public class NastavniciController {
         return this.nastavniciRepo.brisanjeNastavnikaSaPredmeta(idNastavnik, idPredmet);
     }
 
+    @PostMapping("/postaviZaduzenog/{idNastavnik}")
+    public int postaviZaduzenog(@PathVariable long idNastavnik) {
+        return this.nastavniciRepo.upravljanjeZaduzenZaDemonstratore(idNastavnik, true);
+    }
+
+    @PostMapping("/ukloniZaduzenog/{idNastavnik}")
+    public int ukloniZaduzenog(@PathVariable long idNastavnik) {
+        return this.nastavniciRepo.upravljanjeZaduzenZaDemonstratore(idNastavnik, false);
+    }
+
+    @GetMapping("/zaduzenZaDemonstratore")
+    public Nastavnik zaduzenZaDemonstratore(){
+        return this.nastavniciRepo.dohvatiZaduzenogZaDemonstratore();
+    }
+
+
     private String generisanjeLozinke(){
         String karakteri = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!$%#@*";
         StringBuilder lozinka = new StringBuilder();

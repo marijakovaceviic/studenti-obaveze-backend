@@ -102,6 +102,7 @@ public class StudentiRepo implements StudentiRepoInterface {
                         s.setGodinaUpisa(rs2.getInt("godina_upisa"));
                         s.setBrIndeksa(rs2.getInt("br_indeksa"));
                         s.setSmer(rs2.getString("smer"));
+                        s.setTip("student");
                         return s;
                     }
                 }

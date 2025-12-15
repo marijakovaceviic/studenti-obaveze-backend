@@ -186,7 +186,7 @@ public class NastavniciRepo implements NastavniciRepoInterface {
                         n.setIme(rs.getString("ime"));
                         n.setPrezime(rs.getString("prezime"));
                         n.setEmail(rs.getString("email"));
-                        n.setLozinka(rs.getString("lozinka"));
+                        n.setTip("nastavnik");
                         return n;
                     }
                 }
@@ -236,5 +236,46 @@ public class NastavniciRepo implements NastavniciRepoInterface {
         return 0;
 
     }
+
+    @Override
+    public int upravljanjeZaduzenZaDemonstratore(long idNastavnik, boolean zaduzen) {
+        try (Connection conn = DB.source().getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                "UPDATE nastavnici SET zaduzen_demo = ? WHERE id = ?"
+            )) {
+
+            ps.setBoolean(1, zaduzen);
+            ps.setLong(2, idNastavnik);
+            return ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public Nastavnik dohvatiZaduzenogZaDemonstratore() {
+        try (Connection conn = DB.source().getConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM nastavnici WHERE zaduzen_demo = TRUE");
+            ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                Nastavnik n = new Nastavnik();
+                n.setId(rs.getLong("id"));
+                n.setIme(rs.getString("ime"));
+                n.setPrezime(rs.getString("prezime"));
+                n.setEmail(rs.getString("email"));
+                n.setZaduzen_demo(rs.getBoolean("zaduzen_demo"));
+                return n;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
 }

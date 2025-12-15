@@ -6,7 +6,10 @@ public class Nastavnik {
     private String prezime;
     private String email;
     private String lozinka;
+    private boolean zaduzen_demo;
 
+    private String tip;
+    
     public Nastavnik(){}
 
     public Nastavnik(String ime, String prezime, String email){
@@ -59,4 +62,21 @@ public class Nastavnik {
     public void setLozinka(String lozinka) {
         this.lozinka = lozinka;
     }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
+    }
+
+    public boolean isZaduzen_demo() {
+        return zaduzen_demo;
+    }
+
+    public void setZaduzen_demo(boolean zaduzen_demo) {
+        this.zaduzen_demo = zaduzen_demo;
+    }
+    
 }

@@ -166,6 +166,7 @@ public class DemonstratoriRepo implements DemonstartoriRepoInterface {
                 p.setNaziv(rs.getString("naziv"));
                 p.setSifra(rs.getString("sifra"));
                 p.setGodina(rs.getInt("godina"));
+                p.setOdsek(rs.getString("odsek"));
                 predmeti.add(p);
             }
 

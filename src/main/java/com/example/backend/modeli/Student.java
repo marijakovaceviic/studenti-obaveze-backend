@@ -12,6 +12,8 @@ public class Student {
     private Integer godinaUpisa;
     private Integer brIndeksa;
 
+    private String tip;
+    
     public Student(){}
 
     public Student(String email, String lozinka){
@@ -89,5 +91,13 @@ public class Student {
 
     public void setId(Long id){
         this.id = id;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
     }
 }
