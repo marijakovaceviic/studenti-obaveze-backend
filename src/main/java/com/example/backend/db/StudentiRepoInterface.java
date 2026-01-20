@@ -19,4 +19,6 @@ public interface StudentiRepoInterface {
     public List<Student> dohvatanjeStudenataKojiPratePredmet(Long idPredmet);
 
     public List<Student> dohvatanjeRegistrovanihStudenata();
+
+    public Student prijavaNakonLdapProvere(String email);
 }

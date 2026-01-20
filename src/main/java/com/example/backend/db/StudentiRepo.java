@@ -64,7 +64,7 @@ public class StudentiRepo implements StudentiRepoInterface {
     }
 
 
-   @Override
+    @Override
     public Student prijavaStudenta(Student student) {
         try (Connection conn = DB.source().getConnection()) {
 
@@ -238,5 +238,35 @@ public class StudentiRepo implements StudentiRepoInterface {
         return studenti;
     }
 
+
+    @Override
+    public Student prijavaNakonLdapProvere(String email) {
+        try (Connection conn = DB.source().getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+            "SELECT * FROM studenti WHERE email = ?")) {
+
+            ps.setString(1, email);
+
+            try (ResultSet rs2 = ps.executeQuery()) {
+                if (rs2.next()) {
+                    Student s = new Student();
+                    s.setId(rs2.getLong("id"));
+                    s.setEmail(email);
+                    s.setIme(rs2.getString("ime"));
+                    s.setPrezime(rs2.getString("prezime"));
+                    s.setGodinaUpisa(rs2.getInt("godina_upisa"));
+                    s.setBrIndeksa(rs2.getInt("br_indeksa"));
+                    s.setSmer(rs2.getString("smer"));
+                    s.setTip("student");
+                    return s;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
     
 }

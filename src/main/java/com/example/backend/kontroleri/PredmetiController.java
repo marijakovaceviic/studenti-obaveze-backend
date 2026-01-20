@@ -20,49 +20,60 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/predmeti")
 @CrossOrigin(origins = "http://localhost:4200")
 public class PredmetiController {
+
+     private final PredmetiRepo predmetiRepo;
+
+    public PredmetiController(PredmetiRepo predmetiRepo) {
+        this.predmetiRepo = predmetiRepo;
+    }
     
     @PostMapping("/dodavanje")
     public int provera(@RequestBody Predmet predmet) {
-        return new PredmetiRepo().dodavanjePredmeta(predmet);
+        return this.predmetiRepo.dodavanjePredmeta(predmet);
     }
 
     @GetMapping("/sviPredmeti")
     public List<Predmet> dohvatanjeSvihPredmeta() {
-        return new PredmetiRepo().dohvatanjeSvihPredmeta();
+        return this.predmetiRepo.dohvatanjeSvihPredmeta();
     }
 
     @PostMapping("/izborPredmeta")
     public int izborPredmeta(@RequestBody StudentPredmet sp) {
-        return new PredmetiRepo().cuvanjeIzabranihPredmetaZaPracenje(sp.getIzabraniPredmeti(), sp.getStudentId());
+        return this.predmetiRepo.cuvanjeIzabranihPredmetaZaPracenje(sp.getIzabraniPredmeti(), sp.getStudentId());
     }
     
     @GetMapping("/predmetiZaStudenta/{id}")
     public List<Predmet> predmetiZaStudenta(@PathVariable Long id) {
-        return new PredmetiRepo().dohvatanjeIzabranihPredmetaZaStudenta(id);
+        return this.predmetiRepo.dohvatanjeIzabranihPredmetaZaStudenta(id);
     }
     
     @GetMapping("/predmetiZaNastavnika/{id}")
     public List<Predmet> predmetiZaNastavnika(@PathVariable Long id) {
-        return new PredmetiRepo().dohvatanjePredmetaZaNastavnika(id);
+        return this.predmetiRepo.dohvatanjePredmetaZaNastavnika(id);
     }
 
     @GetMapping("/godine/{idStudent}")
     public List<Integer> dohvatanjeGodinaKojeStudentPrati(@PathVariable Long idStudent) {
-        return new PredmetiRepo().dohvatanjeGodinaKojeStudentPrati(idStudent);
+        return this.predmetiRepo.dohvatanjeGodinaKojeStudentPrati(idStudent);
     }
 
     @GetMapping("/predmetiSaAktivnimObavezama/{idStudent}/{godina}")
     public List<Predmet> dohvatanjePredmetaSaAktivnimObavezama(@PathVariable Long idStudent, @PathVariable int godina) {
-        return new PredmetiRepo().dohvatanjePredmetaSaAktivnimObavezamaZaStudenta(idStudent, godina);
+        return this.predmetiRepo.dohvatanjePredmetaSaAktivnimObavezamaZaStudenta(idStudent, godina);
     }
 
     @GetMapping("/premaId/{id}")
     public Predmet dohavatanjePredmetaSaIdijem(@PathVariable Long id) {
-        return new PredmetiRepo().dohvatanjePredemtaPoId(id);
+        return this.predmetiRepo.dohvatanjePredemtaPoId(id);
     }
 
     @GetMapping("/aktivneObavezeZaGodinu/{godina}")
     public List<Predmet> dohvatanjePredmetaSaAktivnimObavezamaZaGodinu(@PathVariable int godina) {
-        return new PredmetiRepo().dohvatanjePredmetaSaAktivnimObavezamaZaGodinu(godina);
+        return this.predmetiRepo.dohvatanjePredmetaSaAktivnimObavezamaZaGodinu(godina);
+    }
+
+    @GetMapping("brojStudenataKojiPrate/{idPredmet}")
+    public int brojStudenataKojiPrateObavestenjaZaPredmet(@PathVariable Long idPredmet){
+        return this.predmetiRepo.brojStudenataKojiPrateObavestenjaZaPredmet(idPredmet);
     }
 }

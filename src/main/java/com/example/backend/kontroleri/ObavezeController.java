@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.db.ObavezeRepo;
 import com.example.backend.modeli.Obaveza;
+import com.example.backend.modeli.StatistikaObavezaDTO;
 
 @RestController
 @RequestMapping("/obaveze")
@@ -55,7 +56,22 @@ public class ObavezeController {
     }
 
     @GetMapping("/istekle/zaPredmet/{id}")
-    public List<Obaveza> dohvatanjeIsteklihObavezaZaNastavnika(@PathVariable Long id){
+    public List<Obaveza> dohvatanjeIsteklihObavezaZaPredmet(@PathVariable Long id){
         return this.obavezeRepo.dohvatanjeIsteklihObavezaZaPredmet(id);
+    }
+
+    @GetMapping("/brojAktivnih/zaPredmet/{id}")
+    public int brojAktivnihObavezaNaPredmetu(@PathVariable Long id){
+        return this.obavezeRepo.brojAktivnihObavezaNaPredmetu(id);
+    }
+
+    @GetMapping("/brojIsteklih/zaPredmet/{id}")
+    public int brojIsteklihObavezaNaPredmetu(@PathVariable Long id){
+        return this.obavezeRepo.brojIsteklihObavezaNaPredmetu(id);
+    }
+
+    @GetMapping("/statistika/{godina}/{odsek}")
+    public List<StatistikaObavezaDTO> statistikaObavezaPoPredmetima(@PathVariable int godina, @PathVariable String odsek){
+        return this.obavezeRepo.statistikaBrojaObavezaNaPredemetima(godina, odsek);
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.db.PrijavaRepo;
 import com.example.backend.modeli.Obaveza;
 import com.example.backend.modeli.Student;
+import com.example.backend.servisi.PrijaveService;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -26,19 +27,27 @@ import jakarta.servlet.http.HttpServletResponse;
 @CrossOrigin(origins = "http://localhost:4200")
 public class PrijaveController {
     
+    private final PrijavaRepo prijavaRepo;
+    private final PrijaveService prijaveService;
+
+    public PrijaveController(PrijavaRepo prijavaRepo, PrijaveService prijaveService) {
+        this.prijavaRepo = prijavaRepo;
+        this.prijaveService = prijaveService;
+    }
+
     @PostMapping("/nova/{idStudent}/{idObaveza}")
     public int novaPrijava(@PathVariable Long idStudent, @PathVariable Long idObaveza) {
-        return new PrijavaRepo().novaPrijava(idStudent, idObaveza);
+        return this.prijaveService.prijavaObaveze(idObaveza, idStudent);
     }
 
     @GetMapping("/provera/{idStudent}/{idObaveza}")
     public int proveraPrijave(@PathVariable Long idStudent, @PathVariable Long idObaveza){
-        return new PrijavaRepo().daLiJePrijavljen(idStudent, idObaveza);
+        return this.prijavaRepo.daLiJePrijavljen(idStudent, idObaveza);
     }
 
     @GetMapping("/svePrijaveZaObavezu/{idObaveza}")
     public List<Student> dohvatanjeSvihPrijavaZaObavezu(@PathVariable Long idObaveza){
-        return new PrijavaRepo().dohvatanjeSvihPrijavaZaObavezu(idObaveza);
+        return this.prijavaRepo.dohvatanjeSvihPrijavaZaObavezu(idObaveza);
     }
 
     @GetMapping("/preuzimanjeSpiska/{idObaveza}")
@@ -82,31 +91,31 @@ public class PrijaveController {
 
     @GetMapping("/prijaveZaLab/student/{id}")
     public List<Obaveza> prijaveLab(@PathVariable Long id) { 
-        return new PrijavaRepo().dohvatanjePrijavaZaStudenta(id, "lab");
+        return this.prijavaRepo.dohvatanjePrijavaZaStudenta(id, "lab");
     }
 
     @GetMapping("/prijaveZaOdbrane/student/{id}")
     public List<Obaveza> prijaveOdbrane(@PathVariable long id) { 
-        return new PrijavaRepo().dohvatanjePrijavaZaStudenta(id, "odbrana");
+        return this.prijavaRepo.dohvatanjePrijavaZaStudenta(id, "odbrana");
     }
 
     @GetMapping("/prijaveZaKolokvijum/student/{id}")
     public List<Obaveza> prijaveKolokvijum(@PathVariable long id) { 
-        return new PrijavaRepo().dohvatanjePrijavaZaStudenta(id, "kolokvijum");
+        return this.prijavaRepo.dohvatanjePrijavaZaStudenta(id, "kolokvijum");
     }
 
     @GetMapping("/prijaveZaIspit/student/{id}")
     public List<Obaveza> prijaveIspit(@PathVariable long id) { 
-        return new PrijavaRepo().dohvatanjePrijavaZaStudenta(id, "ispit");
+        return this.prijavaRepo.dohvatanjePrijavaZaStudenta(id, "ispit");
     }
 
     @GetMapping("/brojPrijava/{idObaveza}")
     public int brojPrijavljenih(@PathVariable Long idObaveza){
-        return new PrijavaRepo().brojPrijavljenih(idObaveza);
+        return this.prijavaRepo.brojPrijavljenih(idObaveza);
     }
 
     @DeleteMapping("/odjava/{idStudent}/{idObaveza}")
     public int odjava(@PathVariable Long idStudent, @PathVariable Long idObaveza){
-        return new PrijavaRepo().odjava(idStudent, idObaveza);
+        return this.prijaveService.odjavaObaveze(idObaveza, idStudent);
     }
 }

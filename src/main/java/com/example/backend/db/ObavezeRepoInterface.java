@@ -3,6 +3,7 @@ package com.example.backend.db;
 import java.util.List;
 
 import com.example.backend.modeli.Obaveza;
+import com.example.backend.modeli.StatistikaObavezaDTO;
 
 public interface ObavezeRepoInterface {
 
@@ -22,5 +23,15 @@ public interface ObavezeRepoInterface {
 
     public List<Obaveza> dohvatanjeIsteklihNeobradjenihObaveza();
 
-    public void oznaciMailPoslat(long idObaveze);
+    public void setPoslatMejlNastavniku(long idObaveze);
+
+    public int brojAktivnihObavezaNaPredmetu(Long idPredmet);
+
+    public int brojIsteklihObavezaNaPredmetu(Long idPredmet);
+
+    public List<Obaveza> dohvatanjeAktivnihNeobavestenihObaveza();
+
+    public void setPoslatMejlStudentima(long idObaveze);
+
+    public List<StatistikaObavezaDTO> statistikaBrojaObavezaNaPredemetima(int godina, String odsek);
 }

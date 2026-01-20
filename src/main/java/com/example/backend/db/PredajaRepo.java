@@ -50,7 +50,7 @@ public class PredajaRepo implements PredajaRepoInterface{
             PreparedStatement ps = conn.prepareStatement(
                 "SELECT o.naziv AS nazivObaveze, o.kraj AS rok, pr.naziv AS nazivPredmeta, p.*\n"+ 
                 "FROM obaveze o JOIN predaje p ON (o.id = p.idObaveze)\n" + 
-                "JOIN predmeti pr ON (o.predmet = pr.id) WHERE p.idStudent = ?"
+                "JOIN predmeti pr ON (o.predmet = pr.id) WHERE p.idStudent = ? ORDER BY o.kraj DESC"
             )) {
             
             ps.setLong(1, idStudent);

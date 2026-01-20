@@ -10,7 +10,8 @@ public class Obaveza {
     private String opis;
     private LocalDateTime pocetak;
     private LocalDateTime kraj;
-    private Boolean poslat_email;
+    private Boolean poslat_email_nastavniku;
+    private Boolean poslat_email_studentima;
 
     private String nazivPredmeta;
     private String sifraPredmeta;
@@ -99,11 +100,19 @@ public class Obaveza {
         this.sifraPredmeta = sifraPredmeta;
     }
 
-    public void setPoslat_email(Boolean poslat){
-        this.poslat_email = poslat;
+    public void setPoslat_email_nastavniku(Boolean poslat){
+        this.poslat_email_nastavniku = poslat;
     }
 
-    public Boolean getPoslat_email(){
-        return this.poslat_email;
+    public Boolean getPoslat_email_nastavniku(){
+        return this.poslat_email_nastavniku;
+    }
+
+    public Boolean getPoslat_email_studentima() {
+        return poslat_email_studentima;
+    }
+
+    public void setPoslat_email_studentima(Boolean poslat_email_studentima) {
+        this.poslat_email_studentima = poslat_email_studentima;
     }
 }

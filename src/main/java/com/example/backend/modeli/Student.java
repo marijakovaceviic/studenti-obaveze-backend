@@ -1,7 +1,6 @@
 package com.example.backend.modeli;
 
 public class Student {
-    
     private Long id;
     private String email;
     private String lozinka;

@@ -7,8 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.example.backend.modeli.Predmet;
 
+@Repository
 public class PredmetiRepo implements PredmetiRepoInterface{
 
     @Override
@@ -253,11 +256,11 @@ public class PredmetiRepo implements PredmetiRepoInterface{
     public List<Predmet> dohvatanjePredmetaSaAktivnimObavezamaZaStudenta(Long idStudent, int godina) {
         List<Predmet> predmeti = new ArrayList<>();
 
-        String sql = "SELECT DISTINCT p.* " +
-                    "FROM predmeti p " +
-                    "JOIN student_predmet sp ON p.id = sp.idPredmet " +
-                    "JOIN obaveze o ON o.predmet = p.id " +
-                    "WHERE sp.idStudent = ? AND p.godina = ? " +
+        String sql = "SELECT DISTINCT p.*\n" +
+                    "FROM predmeti p\n" +
+                    "JOIN student_predmet sp ON p.id = sp.idPredmet\n" +
+                    "JOIN obaveze o ON o.predmet = p.id\n" +
+                    "WHERE sp.idStudent = ? AND p.godina = ?\n" +
                     "AND o.pocetak <= NOW() AND o.kraj >= NOW()";
 
         try (Connection conn = DB.source().getConnection();
@@ -342,6 +345,28 @@ public class PredmetiRepo implements PredmetiRepoInterface{
         }
 
         return predmeti;
+    }
+
+    @Override
+    public int brojStudenataKojiPrateObavestenjaZaPredmet(Long idPredmet) {
+        try (Connection conn = DB.source().getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                "SELECT COUNT(*) AS broj FROM student_predmet WHERE idPredmet = ?"
+            )) {
+
+            ps.setLong(1, idPredmet);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("broj");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
 }

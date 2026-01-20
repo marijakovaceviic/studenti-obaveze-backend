@@ -8,9 +8,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.example.backend.modeli.Obaveza;
 import com.example.backend.modeli.Student;
 
+@Repository
 public class PrijavaRepo implements PrijavaRepoInterface{
 
     @Override
@@ -74,7 +77,7 @@ public class PrijavaRepo implements PrijavaRepoInterface{
             PreparedStatement ps = conn.prepareStatement(
                 "SELECT s.* FROM prijave p \n" +
                 "JOIN studenti s ON s.id = p.idStudent\n" + 
-                "WHERE p.idObaveza = ?"
+                "WHERE p.idObaveza = ? ORDER BY s.godina_upisa, s.br_indeksa"
             )) {
 
             ps.setLong(1, idObaveza);
@@ -102,14 +105,21 @@ public class PrijavaRepo implements PrijavaRepoInterface{
     public List<Obaveza> dohvatanjePrijavaZaStudenta(Long idStudenta, String tip) {
         List<Obaveza> obaveze = new ArrayList<>();
 
+        LocalDateTime danasnjiDatum = LocalDateTime.now();
+        int godina = danasnjiDatum.getMonthValue() >= 10 ? danasnjiDatum.getYear() : danasnjiDatum.getYear() - 1;
+
+        LocalDateTime pocetakSkolskeGodine = LocalDateTime.of(godina, 10, 1, 0, 0);
+
         try (Connection conn = DB.source().getConnection();
             PreparedStatement ps = conn.prepareStatement(
                 "SELECT o.*, pr.naziv AS nazivPredmeta FROM obaveze o JOIN prijave p ON (o.id = p.idObaveza)\n" + 
-                "JOIN predmeti pr ON (o.predmet = pr.id) WHERE p.idStudent = ? AND o.tip = ?"
+                "JOIN predmeti pr ON (o.predmet = pr.id) WHERE p.idStudent = ? AND o.tip = ? AND o.pocetak >= ?\n"+
+                "ORDER BY o.kraj DESC"
             )) {
             
             ps.setLong(1, idStudenta);
             ps.setString(2, tip);
+            ps.setObject(3, pocetakSkolskeGodine);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
 

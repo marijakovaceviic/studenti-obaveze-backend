@@ -27,4 +27,6 @@ public interface PredmetiRepoInterface {
     public Predmet dohvatanjePredemtaPoId(Long id);
 
     public List<Predmet> dohvatanjePredmetaSaAktivnimObavezamaZaGodinu(int godina);
+
+    public int brojStudenataKojiPrateObavestenjaZaPredmet(Long idPredmet);
 }

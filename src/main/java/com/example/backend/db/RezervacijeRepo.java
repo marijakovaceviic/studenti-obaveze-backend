@@ -22,7 +22,7 @@ public class RezervacijeRepo implements RezervacijeRepoInterface {
     public int novaRezervacija(Rezervacija rezervacija) {    
         try (Connection conn = DB.source().getConnection();
             PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO rezervacije_laboratorija (idLaboratorija, nazivObaveze, idNastavnik, datum, vremeOd, vremeDo, akronim) VALUES (?, ?, ?, ?, ?, ?)"
+                "INSERT INTO rezervacije_laboratorija (idLaboratorija, nazivObaveze, idNastavnik, datum, vremeOd, vremeDo, akronim) VALUES (?, ?, ?, ?, ?, ?, ?)"
             )) {
             
             ps.setLong(1, rezervacija.getIdLaboratorija());

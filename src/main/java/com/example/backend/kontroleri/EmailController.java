@@ -57,6 +57,28 @@ public class EmailController {
         return emailService.slanjeHtmlEmaila(email, naslov, html);
     }
 
+    @GetMapping("odjava/{idStudent}/{idObaveza}")
+    public int slanjeMejlaOOdjaviObaveze(@PathVariable Long idStudent, @PathVariable Long idObaveza){
+        String email = studentiRepo.dohvatanjeMejlaStudenta(idStudent);
+        Obaveza obaveza = obavezeRepo.dohvatanjeObaveze(idObaveza);
+
+        String naslov = "Odjava obaveze";
+        LocalDateTime datum = LocalDateTime.now();
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        String formatiranDatum = datum.format(formater);
+
+        String html = "<html>" + "<body>" +
+                  "<p>Uklonili ste prijavu za obavezu: <br> <strong>" + obaveza.getNaziv() + "</strong> na predmetu: <br>" 
+                  + obaveza.getNazivPredmeta() + " (" + obaveza.getSifraPredmeta() + ").</p>" +
+                  "<p>Datum i vreme prijave: " + formatiranDatum + "</p>" +
+                  "<p> Možete se prijaviti ponovo do isteka roka obaveze!</p>"+
+                  "<hr>" +
+                  "<p style='font-size:smaller; color:gray;'>Ovo je automatski generisan mejl, ne odgovarajte na njega.</p>" +
+                  "</body>" +
+                  "</html>";
+        return emailService.slanjeHtmlEmaila(email, naslov, html);
+    }
+
     @GetMapping("uspesnaPredaja/{idStudent}/{idObaveza}")
     public int slanjeMejlaOUspesnostiPredaje(@PathVariable Long idStudent, @PathVariable Long idObaveza){
         String email = studentiRepo.dohvatanjeMejlaStudenta(idStudent);
@@ -98,7 +120,7 @@ public class EmailController {
 
         html += "<p>Predmet: " + o.getNazivPredmeta() + " (" + o.getSifraPredmeta() + ").</p>"; 
 
-         if ("domaci".equalsIgnoreCase(o.getTip())) {
+        if ("domaci".equalsIgnoreCase(o.getTip())) {
             html += "<p>Rok predaje: " + formatiranDatum + "</p>";
         } else {
             html += "<p>Rok prijave: " + formatiranDatum + "</p>";
@@ -167,7 +189,7 @@ public class EmailController {
         lista.append("</ul>");
 
         String html = "<html>" + "<body>" +
-                  "<p>Uspešno ste se prijavili za demonstratorski tim katedre za za Računarsku tehniku i informatiku.</p>" +
+                  "<p>Uspešno ste se prijavili za demonstratorski tim katedre za Računarsku tehniku i informatiku.</p>" +
                   "<p>Datum i vreme prijave: " + formatiranDatum + "</p>" +
                   "<p><strong>Prijavili ste se za sledeće predmete:</strong></p>" + lista.toString() +
                   "<hr>"  +

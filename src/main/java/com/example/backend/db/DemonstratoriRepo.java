@@ -98,9 +98,8 @@ public class DemonstratoriRepo implements DemonstartoriRepoInterface {
         try (Connection conn = DB.source().getConnection();
             PreparedStatement ps = conn.prepareStatement(
                 "INSERT INTO demonstratori_prijave (idStudent, idForma, idPredmet)\n" + 
-                "SELECT (?, ?, ?) WHERE NOT EXISTS (\n" +
-                " SELECT 1 FROM demonstratori_prijave WHERE idStudent = ? AND idForma = ? AND idPredmet = ?\n" +
-                ")"
+                "SELECT ?, ?, ? FROM DUAL WHERE NOT EXISTS (\n" +
+                " SELECT 1 FROM demonstratori_prijave WHERE idStudent = ? AND idForma = ? AND idPredmet = ?)"
             )) {
             
             int brDodatih = 0;    
@@ -223,7 +222,7 @@ public class DemonstratoriRepo implements DemonstartoriRepoInterface {
                 "JOIN predmeti p ON dp.idPredmet = p.id\n" +
                 "JOIN studenti s ON dp.idStudent = s.id\n" +
                 "WHERE dp.idForma = (SELECT MAX(id) FROM demonstratori_forme)\n" +
-                "ORDER BY p.id, s.prezime, s.ime"
+                "ORDER BY s.godina_upisa, s.br_indeksa"
             );
             ResultSet rs = ps.executeQuery()) {
 
