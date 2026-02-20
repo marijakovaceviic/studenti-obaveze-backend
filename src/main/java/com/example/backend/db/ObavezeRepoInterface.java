@@ -1,5 +1,6 @@
 package com.example.backend.db;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.backend.modeli.Obaveza;
@@ -34,4 +35,10 @@ public interface ObavezeRepoInterface {
     public void setPoslatMejlStudentima(long idObaveze);
 
     public List<StatistikaObavezaDTO> statistikaBrojaObavezaNaPredemetima(int godina, String odsek);
+
+    public List<Obaveza> dohvatanjeNovootvorenihObavezaZaPredmet(Long idPredmet);
+
+    public int azuriranjeObaveze(Long id, String naziv, String opis, String tip, LocalDateTime pocetak, LocalDateTime kraj, Long predmet);
+
+    public int brojNovihNeAktivnihObavezaNaPredmetu(Long idPredmet);
 }

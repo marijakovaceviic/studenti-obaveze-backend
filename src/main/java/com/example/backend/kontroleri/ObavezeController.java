@@ -2,6 +2,7 @@ package com.example.backend.kontroleri;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,5 +74,21 @@ public class ObavezeController {
     @GetMapping("/statistika/{godina}/{odsek}")
     public List<StatistikaObavezaDTO> statistikaObavezaPoPredmetima(@PathVariable int godina, @PathVariable String odsek){
         return this.obavezeRepo.statistikaBrojaObavezaNaPredemetima(godina, odsek);
+    }
+
+    @GetMapping("/nove/zaPredmet/{id}") //obaveze koje jos nisu pocele
+    public List<Obaveza> dohvatanjeNovihObavezaZaPredmet(@PathVariable Long id){
+        return this.obavezeRepo.dohvatanjeNovootvorenihObavezaZaPredmet(id);
+    }
+
+    @PostMapping("/azuriranje")
+    public int azurirajObavezu(@RequestBody Obaveza obaveza){
+        return this.obavezeRepo.azuriranjeObaveze(obaveza.getId(), obaveza.getNaziv(), obaveza.getOpis(), 
+        obaveza.getTip(), obaveza.getPocetak(), obaveza.getKraj(), obaveza.getPredmet());
+    }
+
+    @GetMapping("/brojNovihNeaktivnih/zaPredmet/{id}")
+    public int brojNovihNeaktivnihObavezaNaPredmetu(@PathVariable Long id){
+        return this.obavezeRepo.brojNovihNeAktivnihObavezaNaPredmetu(id);
     }
 }

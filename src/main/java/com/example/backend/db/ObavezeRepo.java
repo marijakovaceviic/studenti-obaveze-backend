@@ -452,4 +452,83 @@ public class ObavezeRepo implements ObavezeRepoInterface{
         return obaveze;
     }
 
+    @Override
+    public List<Obaveza> dohvatanjeNovootvorenihObavezaZaPredmet(Long idPredmet) {
+        List<Obaveza> obaveze = new ArrayList<>();
+
+        try (Connection conn = DB.source().getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                "SELECT * FROM obaveze WHERE predmet = ? AND pocetak > NOW() ORDER BY kraj DESC"
+            )) {
+
+            ps.setLong(1, idPredmet);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+
+                    Obaveza o = new Obaveza(
+                        rs.getString("tip"),
+                        rs.getString("naziv"),
+                        rs.getLong("predmet"),
+                        rs.getString("opis"),
+                        rs.getObject("pocetak", LocalDateTime.class),
+                        rs.getObject("kraj", LocalDateTime.class)
+                    );
+                    o.setId(rs.getLong("id"));
+                    obaveze.add(o);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return obaveze;
+    }
+
+    @Override
+    public int azuriranjeObaveze(Long id, String naziv, String opis, String tip, LocalDateTime pocetak,
+            LocalDateTime kraj, Long predmet) {
+        try (Connection conn = DB.source().getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                "UPDATE obaveze SET naziv = ?, opis = ?, tip = ?, pocetak = ?, kraj = ?, predmet = ? WHERE id = ?"
+            )) {
+            
+            ps.setString(1, naziv);
+            ps.setString(2, opis);
+            ps.setString(3, tip);
+            ps.setObject(4, pocetak);
+            ps.setObject(5, kraj);
+            ps.setLong(6, predmet);
+            ps.setLong(7, id);
+            return ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
+    public int brojNovihNeAktivnihObavezaNaPredmetu(Long idPredmet) {
+        try (Connection conn = DB.source().getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                "SELECT COUNT(*) AS broj FROM obaveze WHERE predmet = ? AND pocetak > NOW()"
+            )) {
+
+            ps.setLong(1, idPredmet);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("broj");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
 }
