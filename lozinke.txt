@@ -1,0 +1,18 @@
+studenti:
+
+id: 1 email: km210300d@student.etf.bg.ac.rs lozinka: kmKm3!3
+id 2 - id 10:  lozinka: Sifra1!
+
+
+
+nastavnici:
+
+id: 1  email: km210300d@student.etf.bg.ac.rs  lozinka: lozinka3#
+id: 2  email: mk210300d@student.etf.bg.ac.rs  lozinka: lozinka1#
+id: 3  email: kmm210300d@student.etf.bg.ac.rs  lozinka: lozinka#
+
+
+
+administratori:
+
+id: 1  email: km210300d@student.etf.bg.ac.rs  lozinka: lozinka#
