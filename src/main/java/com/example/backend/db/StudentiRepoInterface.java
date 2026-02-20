@@ -21,4 +21,8 @@ public interface StudentiRepoInterface {
     public List<Student> dohvatanjeRegistrovanihStudenata();
 
     public Student prijavaNakonLdapProvere(String email);
+
+    public long daLiJeRegistrovanStudent(String email);
+
+    public int postavljanjePrivremeneLozinke(String email, String hesiranaLozinka); //kada korisnik zaboravi lozinku
 }

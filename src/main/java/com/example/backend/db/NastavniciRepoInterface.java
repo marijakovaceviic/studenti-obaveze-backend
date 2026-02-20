@@ -23,4 +23,8 @@ public interface NastavniciRepoInterface {
     public int upravljanjeZaduzenZaDemonstratore(long idNastavnik, boolean zaduzen);
 
     public Nastavnik dohvatiZaduzenogZaDemonstratore();
+
+    public long daLiNastavnikImaNalog(String email);
+
+    public int postavljanjePrivremeneLozinke(String email, String hesiranaLozinka); //kada korisnik zaboravi lozinku
 }
