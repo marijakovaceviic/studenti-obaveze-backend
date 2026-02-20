@@ -14,8 +14,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -44,6 +47,9 @@ public class DemonstratoriController {
 
     private final DemonstratoriRepo demonstratoriRepo;
 
+    @Value("${demonstratori.dir}")
+    private String direktorijumZaDemonstratore;
+
     public DemonstratoriController(DemonstratoriRepo demonstratoriRepo) {
         this.demonstratoriRepo = demonstratoriRepo;
     }
@@ -56,7 +62,7 @@ public class DemonstratoriController {
             if (nastavnikZaduzen) {
                 if (pdf != null && !pdf.isEmpty()) {
 
-                    Path direktorijum = Paths.get("D:/demonstratori");
+                    Path direktorijum = Paths.get(direktorijumZaDemonstratore);
                     if (!Files.exists(direktorijum)) {
                         Files.createDirectories(direktorijum);
                     }
@@ -78,10 +84,10 @@ public class DemonstratoriController {
                     if (status == 0){
                         return ResponseEntity.status(500).body(-1);
                     }
+                    return ResponseEntity.ok(0);
                 }
-                return ResponseEntity.ok("Sacuvano");
             }
-            return ResponseEntity.status(500).body(0);
+            return ResponseEntity.status(500).body(-2);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(-1);
@@ -99,18 +105,19 @@ public class DemonstratoriController {
     }
 
     @GetMapping("/preuzimanjeKonkursa/{id}")
-    public ResponseEntity<?> preuzmiPdf(@PathVariable Long id) {
-        String putanja = demonstratoriRepo.putanjaFajlaKonkursa(id);
-        if (putanja == null){
-            return ResponseEntity.status(404).body("PDF nije pronađen.");
+    public ResponseEntity<Resource> preuzmiPdf(@PathVariable Long id) {
+        String putanjaDoFajla = demonstratoriRepo.putanjaFajlaKonkursa(id);
+        if (putanjaDoFajla == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         try {
-            File pdf = new File(putanja);
+   
+            Path putanja = Paths.get(putanjaDoFajla);
 
+            File pdf = putanja.toFile();
             if (!pdf.exists()) {
-                return ResponseEntity.status(404).body("PDF nije pronađen.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
             InputStreamResource resource = new InputStreamResource(new FileInputStream(pdf));
 
             return ResponseEntity.ok()
@@ -121,7 +128,7 @@ public class DemonstratoriController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Greška prilikom preuzimanja PDF-a.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

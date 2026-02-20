@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +31,9 @@ import com.example.backend.modeli.Predaja;
 @RequestMapping("/predaje")
 @CrossOrigin(origins = "http://localhost:4200")
 public class PredajeController {
+
+    @Value("${studentski.radovi.dir}")
+    private String direktorijumZaRadove;
     
     @PostMapping("/nova")
     public ResponseEntity<?> novaPredaja(@RequestParam("file") MultipartFile fajl, @RequestParam("idObaveza") Long idObaveza,
@@ -40,17 +44,18 @@ public class PredajeController {
                     return ResponseEntity.badRequest().body(-1);
                 }
 
-                String folder = "D:/studentskiRadovi/obaveza" + idObaveza;
-                File dir = new File(folder);
-                if (!dir.exists()) dir.mkdirs();
+                Path folder = Paths.get(direktorijumZaRadove, "obaveza" + idObaveza);
+                Files.createDirectories(folder);
 
                 String noviNaziv = student + ".zip";
-                Path putanja = Paths.get(folder + "/" + noviNaziv);
+                Path putanja = folder.resolve(noviNaziv);
+
 
                 Files.write(putanja, fajl.getBytes());
 
-                String putanjaZBazu = folder + "/" + noviNaziv;
-                Integer status = new PredajaRepo().novaPredaja(idStudent, idObaveza, putanjaZBazu);
+                String putanjaZaBazu = putanja.toString();
+
+                Integer status = new PredajaRepo().novaPredaja(idStudent, idObaveza, putanjaZaBazu);
                 if (status < 0) return ResponseEntity.status(500).body(-1);
 
                 return ResponseEntity.ok(0);
@@ -69,7 +74,7 @@ public class PredajeController {
     public ResponseEntity<Resource> preuzimanjeRada(@PathVariable Long idObaveze, @PathVariable String student) {
         try {
             String imeFajla = student + ".zip";
-            Path putanja = Paths.get("D:/studentskiRadovi/obaveza" + idObaveze + "/" + imeFajla);
+            Path putanja = Paths.get(direktorijumZaRadove, "obaveza" + idObaveze, imeFajla);
 
             if (!Files.exists(putanja)) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
